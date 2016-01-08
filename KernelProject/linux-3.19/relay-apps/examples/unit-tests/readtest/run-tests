@@ -1,0 +1,463 @@
+#!/bin/bash
+
+/sbin/insmod ./readtest-mod.ko
+
+echo "--no-overwrite tests--"
+echo ""
+
+echo -e "\nTEST: no-overwrite, buf-full, no padding"
+./readtest -b 16384 -n 4 -w 2051 -s 32 -i 1 -e 2048
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, buf-full x 2, no padding"
+./readtest -b 16384 -n 4 -w 2051 -s 32 -i 2 -e 4096
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, buf-full, padding"
+./readtest -b 16384 -n 4 -w 2115 -s 31 -i 1 -e 2112
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, buf-not-full, no padding"
+./readtest -b 16384 -n 4 -w 2047 -s 32 -i 1 -e 2047
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, buf-not-full x 2, no padding"
+./readtest -b 16384 -n 4 -w 513 -s 32 -i 2 -e 1026
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, buf-not-full x 2, no padding"
+./readtest -b 16384 -n 4 -w 1025 -s 32 -i 2 -e 2050
+if [ $? != 0 ]
+then exit
+fi
+
+echo "--random tests--"
+echo ""
+
+echo -e "\nTEST: no-overwrite, random #events x 1, small avg #s, no padding"
+./readtest -b 16384 -n 4 -w 1 -s 32 -i 1 -r 1024
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x 10, small avg #s, no padding"
+./readtest -b 16384 -n 4 -w 1 -s 32 -i 10 -r 1024
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x 1, small avg #s, padding"
+./readtest -b 16384 -n 4 -w 1 -s 31 -i 1 -r 1024
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x 10, small avg #s, padding"
+./readtest -b 16384 -n 4 -w 1 -s 31 -i 10 -r 1024
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x 1, large avg #s, no padding"
+./readtest -b 16384 -n 4 -w 1 -s 32 -i 1 -r 4096
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x 10, large avg #s, no padding"
+./readtest -b 16384 -n 4 -w 1 -s 32 -i 10 -r 4096
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x 1, large avg #s, padding"
+./readtest -b 16384 -n 4 -w 1 -s 31 -i 1 -r 4096
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x 10, large avg #s, padding"
+./readtest -b 16384 -n 4 -w 1 -s 31 -i 10 -r 4096
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 10, large avg #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 10 -r 512 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 10, good mix #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 10 -r 128 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 10, small avg #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 10 -r 64 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo "--overwrite tests--"
+echo ""
+
+echo -e "\nTEST: overwrite, kthread random 1 secs, small avg #s"
+./readtest -b 512 -n 4 -r 32 -l 32 -t 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 10 secs, small avg #s"
+./readtest -b 512 -n 4 -r 32 -l 32 -t 10 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 1 secs, good mix #s"
+./readtest -b 512 -n 4 -r 92 -l 32 -t 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 10 secs, good mix #s"
+./readtest -b 512 -n 4 -r 92 -l 32 -t 10 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 1 secs, large #s"
+./readtest -b 512 -n 4 -r 128 -l 32 -t 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 10 secs, large #s"
+./readtest -b 512 -n 4 -r 128 -l 32 -t 10 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus a few events, padding"
+./readtest -b 16384 -n 4 -w 2115 -s 31 -o 1 -i 1 -e 3
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 1 subbuf - 1 event, no padding"
+./readtest -b 16384 -n 4 -w 2559 -s 32 -o 1 -i 1 -e 511
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 1 subbuf - 1 event, padding"
+./readtest -b 16384 -n 4 -w 2639 -s 31 -o 1 -i 1 -e 527
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 1 subbuf, no padding"
+./readtest -b 16384 -n 4 -w 2560 -s 32 -o 1 -i 1 -e 512
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 1 subbuf, padding"
+./readtest -b 16384 -n 4 -w 2640 -s 31 -o 1 -i 1 -e 528
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 1 subbuf + 1 event, no padding"
+./readtest -b 16384 -n 4 -w 2561 -s 32 -o 1 -i 1 -e 513
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 1 subbuf + 1 event, padding"
+./readtest -b 16384 -n 4 -w 2641 -s 31 -o 1 -i 1 -e 529
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 2 subbuf - 1, no padding"
+./readtest -b 16384 -n 4 -w 3071 -s 32 -o 1 -i 1 -e 1023
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 2 subbuf - 1, padding"
+./readtest -b 16384 -n 4 -w 3167 -s 31 -o 1 -i 1 -e 1055
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 2 subbuf, no padding"
+./readtest -b 16384 -n 4 -w 3072 -s 32 -o 1 -i 1 -e 1024
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 2 subbuf, padding"
+./readtest -b 16384 -n 4 -w 3168 -s 31 -o 1 -i 1 -e 1056
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 2 subbuf + 1, no padding"
+./readtest -b 16384 -n 4 -w 3073 -s 32 -o 1 -i 1 -e 1025
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 2 subbuf + 1, padding"
+./readtest -b 16384 -n 4 -w 3169 -s 31 -o 1 -i 1 -e 1057
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 3 subbuf - 1, no padding"
+./readtest -b 16384 -n 4 -w 3583 -s 32 -o 1 -i 1 -e 1535
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 3 subbuf - 1, padding"
+./readtest -b 16384 -n 4 -w 3695 -s 31 -o 1 -i 1 -e 1583
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 3 subbuf, no padding"
+./readtest -b 16384 -n 4 -w 3584 -s 32 -o 1 -i 1 -e 1536
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 3 subbuf, padding"
+./readtest -b 16384 -n 4 -w 3696 -s 31 -o 1 -i 1 -e 1584
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 3 subbuf + 1, no padding"
+./readtest -b 16384 -n 4 -w 3585 -s 32 -o 1 -i 1 -e 1537
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 3 subbuf + 1, padding"
+./readtest -b 16384 -n 4 -w 3697 -s 31 -o 1 -i 1 -e 1585
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 4 subbuf - 1, no padding"
+./readtest -b 16384 -n 4 -w 4095 -s 32 -o 1 -i 1 -e 2047
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 4 subbuf - 1, padding"
+./readtest -b 16384 -n 4 -w 4223 -s 31 -o 1 -i 1 -e 2111
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 4 subbuf, no padding"
+./readtest -b 16384 -n 4 -w 4096 -s 32 -o 1 -i 1 -e 2048
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 4 subbuf, padding"
+./readtest -b 16384 -n 4 -w 4224 -s 31 -o 1 -i 1 -e 2112
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 4 subbuf + 1, no padding"
+./readtest -b 16384 -n 4 -w 4097 -s 32 -o 1 -i 1 -e 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 4 subbuf + 1, padding"
+./readtest -b 16384 -n 4 -w 4225 -s 31 -o 1 -i 1 -e 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 5 subbuf, no padding"
+./readtest -b 16384 -n 4 -w 4608 -s 32 -o 1 -i 1 -e 512
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 5 subbuf, padding"
+./readtest -b 16384 -n 4 -w 4752 -s 31 -o 1 -i 1 -e 528
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 5 subbuf + 1 event, no padding"
+./readtest -b 16384 -n 4 -w 4609 -s 32 -o 1 -i 1 -e 513
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, fill all subbufs, plus 5 subbuf + 1 event, padding"
+./readtest -b 16384 -n 4 -w 4753 -s 31 -o 1 -i 1 -e 529
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: a few events in subbuf 0, no padding"
+./readtest -b 16384 -n 4 -w 3 -s 32 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: a few events in subbuf 0, padding"
+./readtest -b 16384 -n 4 -w 3 -s 31 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: exactly fill subbuf 0, no buffer switch, no padding"
+./readtest -b 16384 -n 4 -w 512 -s 32 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: exactly fill subbuf 0, no buffer switch, no padding"
+./readtest -b 16384 -n 4 -w 528 -s 31 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: fill subbuf 0, plus some, no padding"
+./readtest -b 16384 -n 4 -w 515 -s 32 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: fill subbuf 0, plus some, padding"
+./readtest -b 16384 -n 4 -w 531 -s 31 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: exactly fill subbuf 0,1, no padding"
+./readtest -b 16384 -n 4 -w 1024 -s 32 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: exactly fill subbuf 0,1, padding"
+./readtest -b 16384 -n 4 -w 1056 -s 31 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: fill subbuf 0,1, plus some, no padding"
+./readtest -b 16384 -n 4 -w 1027 -s 32 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: fill subbuf 0,1, plus some, padding"
+./readtest -b 16384 -n 4 -w 1059 -s 31 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: exactly fill subbuf 0,1,2, no padding"
+./readtest -b 16384 -n 4 -w 1536 -s 32 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: exactly fill subbuf 0,1,2, padding"
+./readtest -b 16384 -n 4 -w 1584 -s 31 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: exactly fill all subbufs, no final buffer switch, no padding"
+./readtest -b 16384 -n 4 -w 2048 -s 32 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: exactly fill all subbufs, no final buffer switch"
+./readtest -b 16384 -n 4 -w 2112 -s 31 -o 1 -i 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, 1-byte test, 1 subbuf - 1 bytes"
+./readtest -b 512 -n 4 -w 511 -s 1 -o 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, 1-byte test, 1 subbuf"
+./readtest -b 512 -n 4 -w 512 -s 1 -o 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, 1-byte test, 1 subbuf + 1 byte"
+./readtest -b 512 -n 4 -w 513 -s 1 -o 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, 1-byte test, 4 subbuf - 1 bytes"
+./readtest -b 512 -n 4 -w 2047 -s 1 -o 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, 1-byte test, 4 subbuf"
+./readtest -b 512 -n 4 -w 2048 -s 1 -o 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, 1-byte test, 4 subbuf + 1 byte"
+./readtest -b 512 -n 4 -w 2049 -s 1 -o 1 -c 1 -e 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, 1-byte test, 2 subbuf + 1"
+./readtest -b 512 -n 4 -w 1025 -s 1 -i 2 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, 1-byte test, 2 x (2 subbuf + 1)"
+./readtest -b 512 -n 4 -w 2051 -s 1 -i 1 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo "All tests ok, done."
+
+/sbin/rmmod readtest-mod
+
+exit
+

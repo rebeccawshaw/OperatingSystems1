@@ -1,0 +1,121 @@
+#!/bin/bash
+
+/sbin/insmod ./readtest-mod.ko
+
+echo "--overnight tests (these take a long time) --"
+echo ""
+
+echo -e "\nTEST: overwrite, kthread random 1 min, small avg #s"
+./readtest -b 512 -n 4 -r 32 -l 32 -t 60 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 1 min, good mix #s"
+./readtest -b 512 -n 4 -r 92 -l 32 -t 60 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 1 min, large #s"
+./readtest -b 512 -n 4 -r 128 -l 32 -t 60 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 10 mins, small avg #s"
+./readtest -b 512 -n 4 -r 32 -l 32 -t 600 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 10 mins, good mix #s"
+./readtest -b 512 -n 4 -r 92 -l 32 -t 600 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 10 min, large #s"
+./readtest -b 512 -n 4 -r 128 -l 32 -t 60 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 1 hour, small avg #s"
+./readtest -b 512 -n 4 -r 32 -l 32 -t 3600 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 1 hour, good mix #s"
+./readtest -b 512 -n 4 -r 92 -l 32 -t 3600 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 1 hour, large #s"
+./readtest -b 512 -n 4 -r 128 -l 32 -t 3600 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 1000, large avg #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 1000 -r 512 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 1000, good mix #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 1000 -r 128 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 1000, small avg #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 1000 -r 64 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 2 hour, good mix #s"
+./readtest -b 512 -n 4 -r 92 -l 32 -t 7200 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: overwrite, kthread random 4 hour, good mix #s"
+./readtest -b 512 -n 4 -r 92 -l 32 -t 3600 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo "All tests ok, done."
+
+/sbin/rmmod readtest
+
+exit
+
+echo -e "\nTEST: no-overwrite, random #events x 10000, large avg #s, no padding"
+./readtest -b 16384 -n 4 -w 1 -s 31 -i 10000 -r 4096
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 5000, large avg #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 5000 -r 512 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 5000, good mix #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 5000 -r 128 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+
+echo -e "\nTEST: no-overwrite, random #events x random event size x 5000, small avg #s, padding"
+./readtest -b 512 -n 4 -s 32 -i 5000 -r 64 -l 32 -c 1
+if [ $? != 0 ]
+then exit
+fi
+

@@ -1,0 +1,16 @@
+Change KDIR in Makefile to point to the kernel source
+
+# make
+# mount -t debugfs debugfs /debug
+
+Then either run the run-tests or overnight-tests script or do it
+manually using readtest options:
+
+# insmod ./readtest-mod.ko
+# ./readtest [options]
+
+No output - readtest calculates results
+
+NOTE: for all tests to pass, this unit test must be run on a UP
+system, since some tests expect the reader and writer to be on the
+same cpu.

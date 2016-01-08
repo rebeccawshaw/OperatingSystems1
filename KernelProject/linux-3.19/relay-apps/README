@@ -1,0 +1,176 @@
+The examples directory contains a few example relay applications:
+
+kleak - track kmalloc/kfree
+tprintk - temporarily 'tee' printk output to a relay channel
+klog - simple but useful klog utility
+reserve-commit - example of how to write reserve/commit applications
+read - simple example using read(2) to read from a relay channel
+exported-relayfile/exported-percpu - using per-cpu relay files in debugfs
+exported-relayfile/exported-global - using a global relay file in debugfs
+unit-tests/readtest - ugly but comprehensive test code for read(2)
+
+Build instructions:
+
+1) patch kernel with klog.patch (for kleak and klog examples)
+2) configure relay, kprobes (for tprintk example), and klog in the
+   kernel configuration (klog is in the kernel hacking config
+   section, say 'y' to klog kernel debugging functions).
+3) Change KDIR in each example Makefile to point to kernel source dir
+3) run 'make' in each example directory to build the module and app
+4) see below for details on each app
+
+kleak
+-----
+
+kleak is a simple memory leak detection tool that tracks kmalloc and
+kfree by logging a small amount of data for each call to one or the
+other which is then post-processed using a simple Perl script.
+
+To use it, you first need to patch your kernel with a small patch that
+adds the necessary 'instrumentation', kleak.patch.
+
+# mount -t debugfs debugfs /debug
+# insmod ./kleak-mod.ko
+.
+. klog doesn't write anything yet
+.
+# ./kleak
+.
+. the kleak klog handler now writes to the relay channel
+.
+# ^C to stop logging
+.
+. klog again doesn't write anything
+.
+# ./kleak.pl
+
+See below for more general information on klog.
+
+
+tprintk
+-------
+
+tprintk puts a kprobe on the printk() function in the kernel.  The
+kprobe handler writes the printk output to a relay channel after
+removing loglevel tags (these aren't processed by the tprintk program
+so only clutter up the output) and writes a timestamp for each printk
+record (so things can be sorted out between the per-cpu files).  Note
+that this doesn't affect the real printk() output at all - printks are
+logged as they normally are i.e. to klogd and the system log - tprintk
+just creates a duplicate printk stream that gets sent somewhere else.
+One use for this would be to temporily log some high-volume debugging
+data which you don't want cluttering up your system logs.  For
+instance, you could temporarily log TCP traffic to a relay channel
+instead of /var/log/messages by doing something like this:
+
+# mount -t debugfs debugfs /debug
+# insmod ./tprintk-mod.ko
+# pkill klogd
+# iptables -A INPUT -p TCP -j LOG
+.
+. the printk() handler doesn't write anything yet
+.
+# ./tprintk
+.
+. the printk() probe handler now writes to the relay channel
+.
+# ^C to stop logging
+.
+. the printk() probe handler again doesn't write anything
+.
+
+This example kills klogd so the printk output doesn't go to the system
+logs while we're running our test.  Logging starts when ./tprintk
+starts and stops when tprintk is killed.
+
+
+klog
+----
+
+Simple but useful klog utility.  See 'klog debugging facility' below.
+
+
+read
+----
+
+Example code for read(2).
+
+
+exported-relayfile
+------------------
+
+NOTE: All examples have now been converted to using 'exported relay
+files' now that the fs part of relayfs has been dropped and replaced
+with 'relay', so these two examples are redundant.
+
+Exported relayfile apps - there are two examples here, both
+demonstrating how relay files can be used in other pseudo-filesystems
+e.g. debugfs.
+
+The exported-percpu example creates per-cpu relay files in the debugfs
+filesystem. i.e. this code is pretty much the same as the other
+relay examples, with the exception that the relay files live under
+/debug or wherever debugfs is mounted.
+
+The exported-global example creates a global relay file in the debugfs
+filesystem and uses read(2) to read from it.  It amounts to pretty
+much the simplest possible usage of relay for ad hoc kernel logging.
+
+
+reserve-commit
+--------------
+
+Example of how to write reserve/commit applications.
+
+
+unit-tests/readtest
+-------------------
+
+Exhaustive test code for read(2).  It's pretty ugly at this point
+i.e. best not to look at it as a good example to base anything off of.
+
+
+The klog debugging 'facility'
+-----------------------------
+
+klog is a debugging facility built on top of relay.  If you
+configure KLOG in (say 'y' to 'klog debugging functions' in the
+'kernel hacking' config section), you can call klog() and
+klog_printk() from anywhere in the kernel or kernel modules,
+regardless of whether there's a 'handler' actually writing the data to
+a relay channel.  To do something with the data e.g. have it logged
+to a relay channel, create your own module and register a klog
+handler to handle the klog data and write it to a relay channel (see
+lib/klog-simple.c for an example).  Use register_klog_handler() and
+unregister_klog_handler() to start/stop having the logged data sent to
+your module.
+
+# put some code in the kernel that calls klog() to log data
+# mount -t debugfs debugfs /debug
+# modprobe klog-mod
+.
+. the klog() calls in the kernel don't write anything yet
+.
+# ./klog
+.
+. the klog() calls in the kernel now write to the relay channel
+.
+# ^C to stop logging
+.
+. the klog() calls in the kernel again don't write anything
+.
+
+
+The relay-app API (deprecated)
+-----------------
+
+The relay-app API in previous versions of relay-apps (i.e. relay-app.h
+and librelay.c) has been removed, as it was causing more confusion
+than it was worth.  The examples are all now completely self-contained
+and use 'control files' in the relay file system instead of a
+netlink control channel.  As such, the examples are now pretty much
+self-explanatory - each now contains a 'boilerplate' comment below
+which boilerplate application management code appears and can be
+copied and used in other applications without much need to understand
+what it's actually doing.  If necessary, this space is reserved in the
+future for any clarification or explanation of that code.

@@ -1,0 +1,13 @@
+Change KDIR in Makefile to point to the kernel source
+Apply kleak.patch to kernel - this adds kmalloc/kfree logging calls
+Apply klog.patch to kernel - this adds klog facility
+Configure 'klog kernel debugging option'
+
+Then:
+
+# make
+# mount -t debugfs debugfs /debug
+# insmod ./kleak-mod.ko
+# ./kleak
+# ^C to stop logging
+# ./kleak.pl

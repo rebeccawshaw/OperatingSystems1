@@ -1,0 +1,116 @@
+2007-05-10  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* Changed inode->u.generic_ip to inode->i_private for all examples
+	* Removed use of kallsyms_lookup_name() in examples
+
+2007-03-24  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* All examples updated to match relay_open() API change in 2.6.21
+
+2006-08-23  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* All examples updated to use 'relay' API (all now create their
+	relay files in debugfs)
+
+2005-12-21  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* changed read to use smaller event size
+	* changed unit-tests/readtest to use smaller event size	
+
+2005-11-04  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* removed relay-app.h and librelay.c
+	* all examples are now standalone
+	* all examples now use relayfs 'control files'
+	instead of a netlink control channel
+	* added a test-mod to the klog example to make
+	it easier to see that it does something useful
+	* moved readtest to new unit-tests directory
+	* added simple read example as unit-test version is atypical
+	* added exported-relayfile examples
+	* updated kleak.patch and klog.patch to 2.6.14
+
+2005-08-25  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* added readtest example
+	* added klog example
+	* removed usercmd example
+	* updated all to use new netlink_kernel_create
+
+2005-08-04  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* changed to work with new relayfs API changes
+	* added reserve example
+
+2005-07-11  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* librelay.c: added missing pthread_mutex_lock	
+	Thanks to Hareesh Nagarajan for noticing this.
+
+	* relay-app.h: zero dir to avoid double removal.
+
+2005-06-21  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* removed klog-simple example
+
+	* added kleak example
+
+	* moved tprintk, usrcmd out of kernel /lib
+	added klog.patch, removed relay-apps.patch
+
+	* moved each example to examples directory
+
+	* README: updated example documentation
+
+2005-04-21  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* relay-app.h: now also included as separate file
+	(msg_rcv_skb): start logging only if channel exists
+
+	* README: updated relay-app documentation
+
+	Thanks to Baruch Even for discovering this bug.
+
+2005-03-11  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* relay-app.h (in relay-apps.patch): (app_started): removed params
+	(app_stopped): removed params
+	(user_command): callback function, added
+	(relayapp_write): macro, added
+	(_relayapp_write): macro, added
+	fixed NULL directory handling
+	regularized command enum names
+	updated documentation comment
+
+	* librelay.c: (relay_app_main_loop): moved params to
+	init_relay_app
+	(_relay_app_main_loop): removed
+	(init_relay_app): added
+	(_init_relay_app): added
+	converted to new enum names
+
+	* librelay.h: added GPL comment
+	moved command enum here
+	updated extern functions
+	
+	* usercmd.c (in relay-apps.patch): added
+	
+	* usercmd.c: added
+
+	* tprintk.c: converted to new API, cleaned up
+
+	* klog.c (in relay-apps.patch): turned into in-kernel API
+	* klog.h (in relay-apps.patch): turned into in-kernel API
+
+	* klog-simple.c (in relay-apps.patch): example user of klog API
+
+	* klog.c: converted to new API, cleaned up
+	changed netlink unit to 12 so klog can be used with default apps
+	
+	* README: updated relay-app documentation
+
+	Thanks to Baruch Even for comments prompting many of these changes
+
+2005-03-08  Tom Zanussi  <zanussi@us.ibm.com>
+
+	* Initial version

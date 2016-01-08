@@ -1,0 +1,11 @@
+Change KDIR in Makefile to point to the kernel source
+
+Then:
+
+# make
+# mount -t debugfs debugfs /debug
+# insmod ./reserve-mod.ko
+# ./reserve
+# ^C to stop logging
+
+Output in cpu0...cpu1

@@ -1,0 +1,38 @@
+Exported relayfile apps - there are two examples here, both
+demonstrating how relay files can be used in other pseudo-filesystems
+e.g. debugfs.
+
+NOTE: all examples have been converted to having their files created
+in debugfs, so this example is no longer illustrates a special case.
+
+The exported-percpu example creates per-cpu relay files in the debugfs
+filesystem. i.e. this code is pretty much the same as the other
+relay examples, with the exception that the relay files live under
+/debug or wherever debugfs is mounted.
+
+The exported-global example creates a global relay file in the debugfs
+filesystem and uses read(2) to read from it.  It amounts to pretty
+much the simplest possible usage of relay for ad hoc kernel logging.
+
+Change KDIR in Makefile to point to the kernel sources and then
+'make'.
+
+
+exported-percpu usage:
+
+# mount -t debugfs debugfs /debug
+# insmod ./exported-percpu-mod.ko
+# ./exported-percpu [-b subbuf-size -n n_subbufs]
+# ^C to stop logging
+
+captured output will appear in ./cpu0...cpuN-1
+
+
+exported-global usage:
+
+# mount -t debugfs debugfs /debug
+# insmod ./exported-global-mod.ko
+# ./exported-global [-b subbuf-size -n n_subbufs]
+# ^C to stop logging
+
+captured output will appear on stdout

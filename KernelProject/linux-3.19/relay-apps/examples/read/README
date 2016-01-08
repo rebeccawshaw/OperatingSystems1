@@ -1,0 +1,11 @@
+This example uses read(2) instead of mmap() to read data from the
+per-cpu relay buffers.
+
+Change KDIR in Makefile to point to the kernel source
+
+# make
+# mount -t debugfs debugfs /debug
+# insmod ./read-mod.ko
+# ./read
+
+Output in cpu0...cpuX

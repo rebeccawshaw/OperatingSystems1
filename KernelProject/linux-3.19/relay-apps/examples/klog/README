@@ -1,0 +1,19 @@
+Simple klog app - this can be used to gather data from anywhere in the
+kernel without needing to write any relay code (just put klog() and
+klog_printk() calls wherever you want).
+
+Change KDIR in Makefile to point to the kernel source
+Apply klog.patch to kernel - this adds klog facility
+Configure 'klog kernel debugging option'
+
+Then:
+
+# make
+# mount -t debugfs debugfs /debug
+# insmod ./klog-mod.ko
+# ./klog
+# ^C to stop logging
+# in another window, insmod test-mod.ko, which will log some test data
+
+Log whatever data you want from the kernel or modules using klog()
+and/or klog_printk().

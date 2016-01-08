@@ -1,0 +1,13 @@
+Change KDIR in Makefile to point to the kernel source
+
+Then:
+
+# make
+# mount -t debugfs debugfs /debug
+# insmod ./tprintk-mod.ko
+# pkill klogd
+# iptables -A INPUT -p TCP -j LOG
+# ./tprintk
+# ^C to stop logging
+
+Output in cpu0...cpu1
