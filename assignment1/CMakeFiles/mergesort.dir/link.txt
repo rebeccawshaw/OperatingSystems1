@@ -1,0 +1,1 @@
+/usr/bin/c++    --std=c++11 -g    CMakeFiles/mergesort.dir/mergesort.cxx.o  -o mergesort -rdynamic -lboost_program_options 

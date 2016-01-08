@@ -1,0 +1,83 @@
+#include "Condition.hxx"
+#include <iostream>
+Condition::Condition (Mutex &mutex):m_(mutex), cond_(PTHREAD_COND_INITIALIZER)
+// Fill in here
+{
+}
+
+
+Condition::~Condition (void)
+{
+  pthread_cond_destroy(&cond_);
+}
+
+
+void
+Condition::wait (unsigned long timeout)
+{
+  // Fill in here
+  const timespec &t = convert(timeout);
+  m_.lock();
+  int tracker = pthread_cond_timedwait(&cond_, &m_.m_, &t);
+  m_.unlock();
+  
+  if(!tracker) {
+    throw timeout;
+  }
+}
+
+
+void
+Condition::wait (std::function <bool (void)> condition, unsigned long timeout)
+{
+  // Fill in here
+  int tracker;
+  const timespec &t = convert(timeout);
+  m_.lock();
+  while(!condition()) {
+    tracker = pthread_cond_timedwait(&cond_, &m_.m_, &t);
+  }
+  m_.unlock();
+  
+  if(!tracker) {
+    throw timeout;
+  }
+}
+
+
+void
+Condition::wait (const timespec &t)
+{
+  // Fill in here
+  m_.lock();
+  pthread_cond_timedwait(&cond_, &m_.m_, &t);
+  m_.unlock();
+}
+
+
+timespec
+Condition::convert (unsigned long ms)
+{
+  // Fill in here
+  timespec abs, cur;
+  clock_gettime(CLOCK_REALTIME, &cur);
+  abs.tv_sec = ms / 1000 - cur.tv_sec;
+  abs.tv_nsec = (ms % 1000) * 1000000 - cur.tv_nsec;
+  return abs;
+}
+
+
+void
+Condition::signal (void)
+{
+  // Fill in here
+  pthread_cond_signal(&cond_);
+}
+
+
+void
+Condition::broadcast (void)
+{
+  // Fill in here
+  pthread_cond_broadcast(&cond_);
+}

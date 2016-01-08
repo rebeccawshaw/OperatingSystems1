@@ -1,0 +1,1 @@
+/usr/bin/c++    --std=c++11 -g    CMakeFiles/primescanner.dir/Condition.cxx.o CMakeFiles/primescanner.dir/primescanner.cxx.o CMakeFiles/primescanner.dir/Tasks.cxx.o  -o primescanner -rdynamic -lboost_program_options -lpthread 

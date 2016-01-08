@@ -1,0 +1,15 @@
+Note: Check for "//TODO:@Yogesh:" in "sort_strategy.txx" for comments
+Rubric:
+• 30 points: Completion and correct execution of “Step 1” functionality.
+Scored:30
+• 30 points: Completion and correct execution of “Step 2” functionality.
+review the comments
+Scored:20
+• 20 points: Correct and insightful programming style.
+Scored: 20
+• 10 points: Consistent formatting and indenting style.
+Scored:10
+• 10 points: Correct and useful commenting.
+Scored:10
+-------------
+Total:90/100 
